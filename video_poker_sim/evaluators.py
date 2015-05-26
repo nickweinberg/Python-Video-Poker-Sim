@@ -1,4 +1,67 @@
 
+# def payout(hand):
+#     # maybe read payouts from file
+#     if isRoyalFlush(hand):
+#         return bet_val * ROYAL
+
+#     elif isStraightFlush(hand):
+#         return bet_val * ST_FLUSH
+
+#     elif isOfAKind(hand,4):
+#         return bet_val * FOUR_KIND
+
+#     elif isFullHouse(hand):
+#         return bet_val * FULL_HOUSE
+
+#     elif isFlush(hand):
+#         return bet_val * FLUSH
+
+#     elif isStraight(hand):
+#         return bet_val * STRAIGHT
+
+#     elif isOfAKind(hand,3):
+#         return bet_val * THREE_KIND
+
+#     elif isTwoPair(hand):
+#         return bet_val * TWO_PAIR
+
+#     elif isJacksOrBetter(hand):
+#         # will be different w/ deuces wild
+#         return bet_val * JACK_BETTER
+
+#     else:
+#         return 0
+
+
+
+
+
+def payout(hand):
+    # maybe read payouts from file
+    if isRoyalFlush(hand):
+        return 9
+    elif isStraightFlush(hand):
+        return 8
+    elif isOfAKind(hand,4):
+        return 7
+    elif isFullHouse(hand):
+        return 6
+    elif isFlush(hand):
+        return 5
+    elif isStraight(hand):
+        return 4
+    elif isOfAKind(hand,3):
+        return 3
+    elif isTwoPair(hand):
+        return 2
+
+    elif isJacksOrBetter(hand):
+        return 1
+
+    else:
+        return 0
+
+
 def isFlush(hand):
     if(hand[0][1] == hand[1][1] == hand[2][1] == hand[3][1] == hand[4][1]):
         return True
@@ -99,3 +162,18 @@ def isTwoPair(hand):
 
     else:
         return False
+
+
+#### CONSTANTS ####
+bet_val = 1.00 #1$
+
+#payout table
+ROYAL = 800
+ST_FLUSH = 50
+FOUR_KIND = 25
+FULL_HOUSE = 9
+FLUSH = 6
+STRAIGHT = 4
+THREE_KIND = 3
+TWO_PAIR = 2
+JACK_BETTER = 1

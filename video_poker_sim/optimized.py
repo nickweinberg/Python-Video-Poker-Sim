@@ -1,5 +1,6 @@
 # lets try to optimize this
 import numpy as np
+import scipy.misc as sc
 
 import itertools
 import random
@@ -8,22 +9,27 @@ import pprint
 import sys
 import os
 
-from evaluators import isRoyalFlush, isStraightFlush, isOfAKind, isFullHouse, isFlush, isStraight, isTwoPair, isJacksOrBetter
+from evaluators import isRoyalFlush, isStraightFlush, isOfAKind, isFullHouse, isFlush, isStraight, isTwoPair, isJacksOrBetter, payout
+
+import timeit
+start_time = timeit.default_timer()
 
 print_color = { 1 : 'C', 2: 'S', 3: 'D', 4: 'H' }
 print_num = {1:'A', 2:'2', 3:'3', 4:'4', 5:'5', 6:'6', 7:'7', 8:'8', 9:'9', 10:'10', 11:'J', 12:'Q', 13:'K'}
 
 
+color = [1,2,3,4] #names of suits dont matter
+value = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+cards = []
+for c in color:
+    for v in value:
+        cards.append((v,c))
 
 def make_deck():
     # initialize the 52 cards
     color = [1,2,3,4] #names of suits dont matter
     value = [1,2,3,4,5,6,7,8,9,10,11,12,13]
-    deck = []
-
-    for c in color:
-        for v in value:
-            deck.append((v,c))
+    deck = cards
 
     random.shuffle(deck)
     return deck
@@ -33,8 +39,8 @@ def deal_hand(deck):
     return hand, deck
 
 
-deck = make_deck()
-hand, deck = deal_hand(deck)
+# deck = make_deck()
+# hand, deck = deal_hand(deck)
 
 
 """
@@ -62,17 +68,29 @@ d_four = np.zeros([52, 16])
 # discard five cards
 d_five = np.zeros(16)
 
+counter = 0
+# for _ in itertools.permutations(cards, 5):
+#     counter += 1
+yo = []
+for c in color:
+    for v in value:
+        yo.append((v,c))
+
+
+
+
 # 16 is for the maximum number of paying hands on the draw
 
-
 # loop through 2,598,960 combinations of 5 cards out of 52
-
 # score according to poker value
 
 # put the score in d_zero.
 # first hand in element 0
 # 2nd hand in element 1...
+for i, hand in enumerate(itertools.combinations(yo, 5)):
+    d_zero[i] = payout(hand)
 
+print(timeit.default_timer() - start_time)
 
 # for each of the 5 ways to choose 4 cards on the deal
 # translate the four cards  into an index number from
