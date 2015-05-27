@@ -23,7 +23,7 @@ Card Mappings:
 """
 
 def get_hand_type(hand):
-    #
+    # print(hand)
     c1,c2,c3,c4,c5 = hand
     r1,r2,r3,r4,r5 = c1[0],c2[0],c3[0],c4[0],c5[0] #ranks
     s1,s2,s3,s4,s5 = c1[1],c2[1],c3[1],c4[1],c5[1] #suits
@@ -32,7 +32,8 @@ def get_hand_type(hand):
     is_flush = (s1 == s2 and s2==s3 and s3==s4 and s4==s5)
 
     score = 0 #
-    # sorts cards
+    # sort hand w/ bitwise XOR
+    # TODO: test if this is faster than built-in sort
     if (r1 > r2):
         r1 = r1 ^ r2
         r2 = r2 ^ r1
@@ -74,9 +75,7 @@ def get_hand_type(hand):
         r5 = r5 ^ r4
         r4 = r4 ^ r5
 
-
-    print([r1,r2,r3,r4,r5],[s1,s2,s3,s4,s5])
-
+    # end sort
 
     if is_flush:
         if r1 == 8:
@@ -88,7 +87,7 @@ def get_hand_type(hand):
         elif ((r1 == r2-1) and
              (r2 == r3-1) and
              (r3 == r4-1) and
-             (r4 == r5-1)) or (r1==0 and r5==12):
+             ((r4 == r5-1) or (r1==0 and r5==12))):
 
             score = 8 # straight flush
         else:
@@ -96,12 +95,34 @@ def get_hand_type(hand):
 
     else:
         # not flush cases
-        if ((r2 == r3) and (r3==r4) and (r1==r2)) or (r4==r5):
+        if ((r1 == r3) and (r3 == r4) and ((r1 == r2) or (r4 == r5))):
             score = 7 # four of a kind
 
         elif ((r1 == r2) and (r4 == r5) and ((r2 ==r3) or (r3 ==r4))):
-            score = 6
+            score = 6 # full house
 
+        elif ((r1 == r2-1) and
+              (r2 == r3-1) and
+              (r3 == r4-1) and
+              ((r4 == r5-1) or (r1==0 and r5==12))):
+            # same as straight flush just not a flush
+            score = 4 # straight
+
+        elif (((r1==r2) and (r2==r3)) or
+              ((r2==r3) and (r3==r4)) or
+              ((r3==r4) and (r4==r5))):
+            score = 3 # Three of a Kind
+
+        elif (((r1==r2) and (r3==r4)) or
+              ((r1==r2) and (r4==r5)) or
+              ((r2==r3) and (r4==r5))):
+            score = 2 # Two Pair
+
+        elif (((r1==r2) and (r1 >=9)) or
+              ((r2==r3) and (r2 >=9)) or
+              ((r3==r4) and (r3 >=9)) or
+              ((r4==r5) and (r4 >=9))):
+            score = 1 # jacks or better
         else:
             score = 0
     return score
