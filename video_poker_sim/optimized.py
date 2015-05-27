@@ -4,13 +4,15 @@ import scipy.misc as sc
 import csv
 
 import itertools
+from itertools import combinations
 import random
 import pprint
 
 import sys
 import os
 
-from evaluators import isRoyalFlush, isStraightFlush, isOfAKind, isFullHouse, isFlush, isStraight, isTwoPair, isJacksOrBetter, payout
+from evaluators import payout
+from hand_scoring import get_hand_type
 
 import timeit
 start_time = timeit.default_timer()
@@ -19,18 +21,15 @@ print_color = { 1 : 'C', 2: 'S', 3: 'D', 4: 'H' }
 print_num = {1:'A', 2:'2', 3:'3', 4:'4', 5:'5', 6:'6', 7:'7', 8:'8', 9:'9', 10:'10', 11:'J', 12:'Q', 13:'K'}
 
 
-color = [1,2,3,4] #names of suits dont matter
-value = [1,2,3,4,5,6,7,8,9,10,11,12,13]
-cards = []
-for c in color:
-    for v in value:
-        cards.append((v,c))
 
 def make_deck():
     # initialize the 52 cards
     color = [1,2,3,4] #names of suits dont matter
-    value = [1,2,3,4,5,6,7,8,9,10,11,12,13]
-    deck = cards
+    value = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+    deck = []
+    for c in color:
+        for v in value:
+            deck.append([c,v])
 
     random.shuffle(deck)
     return deck
@@ -39,10 +38,15 @@ def deal_hand(deck):
     hand = [deck.pop() for _ in range(5)]
     return hand, deck
 
+def draw_cards(deck, hand, n):
+    # draw n cards
+    for i in n:
+        hand.append(deck[-i])
+    return hand
 
-# deck = make_deck()
-# hand, deck = deal_hand(deck)
 
+def check_all_possible_holds(hand):
+    pass
 
 """
 To optimize let's solve the playing strategy first.
@@ -72,10 +76,7 @@ d_five = np.zeros(16)
 counter = 0
 # for _ in itertools.permutations(cards, 5):
 #     counter += 1
-yo = []
-for c in color:
-    for v in value:
-        yo.append((v,c))
+
 
 
 
@@ -90,13 +91,25 @@ for c in color:
 # 2nd hand in element 1...
 # for i, hand in enumerate(itertools.combinations(yo, 5)):
 #     d_zero[i] = payout(hand)
-dest_file = 'data/5_card_combos.csv'
+# dest_file = 'data/5_card_combos.csv'
 
-with open(dest_file, 'r') as dest_f:
-    data_iter = csv.reader(dest_f, delimiter = '\n')
-    data = [data for data in data_iter]
+# with open(dest_file, 'r') as dest_f:
+#     data_iter = csv.reader(dest_f, delimiter = '\n')
+#     data = [data for data in data_iter]
 
-data_array = np.asarray(data)
+# data_array = np.asarray(data)
+deck = make_deck()
+hand, deck = deal_hand(deck)
+
+
+# all possible holds
+hold_5 = hand
+hold_4_combos = combinations(hand, 4)
+hold_3_combos = combinations(hand, 3)
+hold_2_combos = combinations(hand, 2)
+hold_1_combos = combinations(hand, 1)
+# hold_0 = draw_new_hand(deck)
+
 
 
 print(timeit.default_timer() - start_time)

@@ -16,6 +16,8 @@ import timeit
 """
 An attempt to simplify the deck by in some cases ignoring suits.
 (idea from https://web.archive.org/web/20130213053427/http://www.vpgenius.com/articles/deck-simplification.aspx)
+
+https://web.archive.org/web/20120509212547/http://www.vpgenius.com/video-poker/jacks-or-better.aspx#
 Identify possible combinations for following core hands:
 
 * Four of a Kind
@@ -38,5 +40,17 @@ Identify possible combinations for following core hands:
  No Pair hands have five ranks,
  each of which must be different
  (otherwise it would be a different core hand type).
+
+"""
+
+"""
+Idea: for every
+
+
+"""
+
+
+"""
+EV = sum( payout * (payout hits/total draws))
 
 """

@@ -1,28 +1,10 @@
 import itertools
 import random
 import pprint
-
 import sys
 import os
 
-from evaluators import isRoyalFlush, isStraightFlush, isOfAKind, isFullHouse, isFlush, isStraight, isTwoPair, isJacksOrBetter
-# start of just want some functions that will probably be useful
 
-
-#implements n! where 'n' is integar
-def factorial(n):
-    # do i really want to use recursion here?
-    if n==1 or n==0:
-        # base case
-        return 1
-    else:
-        return n*factorial(n-1)
-
-def combination(n, k):
-    # nCk where n and k are integers
-    num = factorial(n)
-    denom = factorial(n-k) * factorial(k)
-    return num / denom
 
 def create_new_deck():
     deck = []
