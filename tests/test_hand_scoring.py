@@ -30,7 +30,11 @@ class HandScoringTestCase(unittest.TestCase):
         SF_hand = [
         [10,1], [11,1],[7,1], [9,1], [8,1]]
 
+        hi_low_SF_hand = [
+        [12,1], [0,1],[1,1], [2,1], [3,1]]
+
         self.assertEqual(get_hand_type(SF_hand), 8)
+        self.assertEqual(get_hand_type(hi_low_SF_hand), 8)
 
     def test_flush(self):
         flush_hand = [
@@ -44,19 +48,34 @@ class HandScoringTestCase(unittest.TestCase):
         self.assertEqual(get_hand_type(FoaK_hand), 7)
 
     def test_full_house(self):
-        full_house_hand = [[]]
+        full_house_hand = [
+        [1,1],[2,2],[1,2],[1,3],[2,4]]
+        self.assertEqual(get_hand_type(full_house_hand), 6)
 
     def test_straight(self):
-        straight_hand= [[]]
+        straight_hand= [
+        [10,3], [11,2],[7,1], [9,1], [8,1]]
+
+        hi_low_straight_hand = [
+        [12,1], [0,1],[1,3], [2,2], [3,1]]
+        self.assertEqual(get_hand_type(hi_low_straight_hand), 4)
 
     def test_three_of_a_kind(self):
-        ToaK_hand = [[]]
+        ToaK_hand = [
+        [2,2],[1,1],[2,3],[2,4],[9,1]]
+        self.assertEqual(get_hand_type(ToaK_hand), 3)
 
     def test_two_pair(self):
-        two_pair_hand = [[]]
+        two_pair_hand = [
+        [2,2],[1,1],[2,3],[9,2],[9,1]]
+        self.assertEqual(get_hand_type(two_pair_hand), 2)
 
     def test_jacks_or_better(self):
-        JoB_hand = [[]]
+        JoB_hand = [
+        [2,3],[1,1],[11,3],[9,2],[9,1]]
+        self.assertEqual(get_hand_type(JoB_hand), 1)
 
     def test_no_win(self):
-        no_win_hand = [[]]
+        no_win_hand = [
+        [2,1],[12,3],[3,3],[7,4],[9,1]]
+        self.assertEqual(get_hand_type(no_win_hand), 0)
