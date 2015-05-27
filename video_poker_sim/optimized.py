@@ -1,6 +1,7 @@
 # lets try to optimize this
 import numpy as np
 import scipy.misc as sc
+import csv
 
 import itertools
 import random
@@ -87,8 +88,16 @@ for c in color:
 # put the score in d_zero.
 # first hand in element 0
 # 2nd hand in element 1...
-for i, hand in enumerate(itertools.combinations(yo, 5)):
-    d_zero[i] = payout(hand)
+# for i, hand in enumerate(itertools.combinations(yo, 5)):
+#     d_zero[i] = payout(hand)
+dest_file = 'data/5_card_combos.csv'
+
+with open(dest_file, 'r') as dest_f:
+    data_iter = csv.reader(dest_f, delimiter = '\n')
+    data = [data for data in data_iter]
+
+data_array = np.asarray(data)
+
 
 print(timeit.default_timer() - start_time)
 
@@ -96,7 +105,8 @@ print(timeit.default_timer() - start_time)
 # translate the four cards  into an index number from
 # 0 to 270,724
 # then increment element[index number][hand score] of d_one by 1
-
+ # for i, hand in enumerate(itertools.combinations(yo, 4)):
+ #    d_one[i] = payout(hand)
 
 # for each of the 10 ways to choose 3 out of 5 cards on the deal, translate
 # the three cards into an index number from 0 to 22,099
