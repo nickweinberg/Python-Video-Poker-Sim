@@ -28,7 +28,6 @@ def get_hand_type(hand):
     r1,r2,r3,r4,r5 = c1[0],c2[0],c3[0],c4[0],c5[0] #ranks
     s1,s2,s3,s4,s5 = c1[1],c2[1],c3[1],c4[1],c5[1] #suits
 
-    print(s1,s2,s3,s4,s5)
     # If all suits are the same it's a flush
     is_flush = (s1 == s2 and s2==s3 and s3==s4 and s4==s5)
 
@@ -76,8 +75,9 @@ def get_hand_type(hand):
         r4 = r4 ^ r5
 
 
-    print(r1,r2,r3,r4,r5)
-    print(is_flush)
+    print([r1,r2,r3,r4,r5],[s1,s2,s3,s4,s5])
+
+
     if is_flush:
         if r1 == 8:
             # logically if hand is sorted
@@ -90,18 +90,22 @@ def get_hand_type(hand):
              (r3 == r4-1) and
              (r4 == r5-1)) or (r1==0 and r5==12):
 
-            score = 8 # royal flush
-            print('straight')
+            score = 8 # straight flush
+        else:
+            score = 5 # Flush
 
+    else:
+        # not flush cases
+        if ((r2 == r3) and (r3==r4) and (r1==r2)) or (r4==r5):
+            score = 7 # four of a kind
 
+        elif ((r1 == r2) and (r4 == r5) and ((r2 ==r3) or (r3 ==r4))):
+            score = 6
+
+        else:
+            score = 0
     return score
 
 
 
-# Hand(Rank1, Suit1, ... Rank5, Suit5)
-hand = np.array([
-    [5,1], [12,1],[1,1], [1,1], [12,1]
-], dtype='int16')
-
-# get_hand_type(hand)
 
