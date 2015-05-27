@@ -6,7 +6,20 @@ hand_scoring.py
 idea from :
 https://web.archive.org/web/20120509212547/http://www.vpgenius.com/video-poker/jacks-or-better.aspx#
 
-
+Card Mappings:
+0: 2
+1: 3
+2: 4
+3: 5
+4: 6
+5: 7
+6: 8
+7: 9
+8: Ten
+9: Jack
+10: Queen
+11: King
+12: Ace
 """
 
 def get_hand_type(hand):
@@ -18,6 +31,7 @@ def get_hand_type(hand):
     # If all suits are the same it's a flush
     is_flush = (s1 == s2 and s2==s3 and s3==s4 and s4==s5)
 
+    score = 0 #
     # sorts cards
     if (r1 > r2):
         r1 = r1 ^ r2
@@ -61,13 +75,30 @@ def get_hand_type(hand):
         r4 = r4 ^ r5
 
 
-    # if is_flush:
-    #     if r1 == 8:
-            # logically must
+    if is_flush:
+        if r1 == 8:
+            # logically if hand is sorted
+            # and it's a flush. Then  if first card is
+            # a ten must be a royal flush.
+            # We use similiar logic for other steps.
+            score = 9 # Royal Flush
+        elif ((r1 == r2-1) and
+             (r2 == r3-1) and
+             (r3 == r4-1) and
+             (r4 == r5-1)) or (r1==0 and r5==12):
+
+            score = 8 # royal flush
+            print('straight')
+
+
+    return score
 
 
 
 # Hand(Rank1, Suit1, ... Rank5, Suit5)
-hand = np.array([[5,0], [12,1],[1,2], [1,3], [12,4]], dtype='int16')
+hand = np.array([
+    [5,1], [12,1],[1,1], [1,1], [12,1]
+], dtype='int16')
 
-get_hand_type(hand)
+# get_hand_type(hand)
+
