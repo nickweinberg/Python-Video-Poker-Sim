@@ -22,6 +22,50 @@ Card Mappings:
 12: Ace
 """
 
+#### CONSTANTS ####
+bet_val = 1.00 #1$
+
+#payout table
+ROYAL = 800
+ST_FLUSH = 50
+FOUR_KIND = 25
+FULL_HOUSE = 9
+FLUSH = 6
+STRAIGHT = 4
+THREE_KIND = 3
+TWO_PAIR = 2
+JACK_BETTER = 1
+
+def payout(score):
+    # maybe read payouts from file
+    if score==9:
+        return bet_val * ROYAL
+    elif score==8:
+        return bet_val * ST_FLUSH
+
+    elif score==7:
+        return bet_val * FOUR_KIND
+
+    elif score==6:
+        return bet_val * FULL_HOUSE
+
+    elif score==5:
+        return bet_val * FLUSH
+
+    elif score==4:
+        return bet_val * STRAIGHT
+
+    elif score==3:
+        return bet_val * THREE_KIND
+
+    elif score==2:
+        return bet_val * TWO_PAIR
+
+    elif score==1:
+        return bet_val * JACK_BETTER
+    else:
+        return 0
+
 def get_hand_type(hand):
     # print(hand)
     c1,c2,c3,c4,c5 = hand

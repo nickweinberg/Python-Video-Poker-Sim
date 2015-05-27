@@ -27,7 +27,7 @@ def make_deck():
     deck = []
     for c in color:
         for v in value:
-            deck.append([c,v])
+            deck.append([v,c])
 
     random.shuffle(deck)
     return deck
@@ -52,12 +52,38 @@ hold_5 = dealt_hand
 current_best_EV = payout(get_hand_type(hold_5))
 
 hold_4_combos = combinations(dealt_hand,4)
-for hand in hold_4_combos:
+hold_3_combos = combinations(dealt_hand, 3)
+hold_2_combos = combinations(dealt_hand, 2)
+hold_1_combos = combinations(dealt_hand, 1)
+
+all_possible_holds = list(hold_4_combos) + list(hold_3_combos) + list(hold_2_combos) + list(hold_1_combos)
 
 
-# hold_3_combos = combinations(hand, 3)
-# hold_2_combos = combinations(hand, 2)
-# hold_1_combos = combinations(hand, 1)
+# print(list(combinations(dealt_hand,4)))
+
+payout_running_sum = 0
+expected_value = []
+
+for hold in all_possible_holds:
+    number_of_draws = 5-len(hold)
+    no_all_possible_draws = sc.comb(len(deck), number_of_draws)
+    payout_running_sum = 0.0
+    sets = combinations(deck,number_of_draws)
+
+    for drawn_cards in sets:
+        payout_running_sum += payout(get_hand_type(hold + drawn_cards))
+
+    expected_value.append(payout_running_sum/no_all_possible_draws)
+
+max_val = 0.0
+for i in range(0, len(expected_value)):
+    if expected_value[i] > max_val:
+        max_val = expected_value[i]
+        index = i
+
+print "hand: " + str(dealt_hand)
+print "hold: " + str(all_possible_holds[index])
+print "EV: " + str(max_val)
 # hold_0 = draw_new_hand(deck)
 
 # check EV,
@@ -68,4 +94,4 @@ for hand in hold_4_combos:
 # print highest EV
 
 
-print(timeit.default_timer() - start_time)
+print('runtime: %f') % (timeit.default_timer() - start_time)
