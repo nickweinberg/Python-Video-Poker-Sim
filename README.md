@@ -15,3 +15,6 @@ Currently the plan is to come up with various ways to cut down on the various ho
 Turns out python is slow as mud. Need to optimize. 
 
 Was able to reduce evaluating a random hand from ~30seconds on local MacBook Pro using brute_force.py down to ~3seconds. This still isn't fast enough for multiple 1MM+ hand simulations.
+
+## Testing
+To run current tests, in project directory: nose2
