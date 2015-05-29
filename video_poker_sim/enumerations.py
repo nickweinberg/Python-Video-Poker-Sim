@@ -1,55 +1,67 @@
 import numpy as np
+import itertools
+
+import numpy as np
 import scipy.misc as sc
+import csv
 
 import itertools
+from itertools import combinations
 import random
 import pprint
-import csv
-from hand_scoring import get_hand_type, payout
+
 import sys
 import os
 
-
 import timeit
 
+from hand_scoring import get_hand_type, payout
+"""
+1) Enumerate all the possibilties.
+2) Save these data structures to disc.
+-That way we only have to run this operation once.
+
+"""
 start_time = timeit.default_timer()
-
-
-# discard zero cards
-d_zero = np.zeros(2598960,)
-
-# discard one card
-d_one = np.zeros([270725, 16])
-# discard two cards
-d_two = np.zeros([22100, 16])
-# discard three cards
-d_three = np.zeros([1326, 16])
-# discard four cards
-d_four = np.zeros([52, 16])
-# discard five cards
-d_five = np.zeros(16)
-
-
-# make deck of 52 cards
+# create deck
 color = [1,2,3,4] #names of suits dont matter
 value = [0,1,2,3,4,5,6,7,8,9,10,11,12]
-cards = []
-for c in color:
-    for v in value:
-        cards.append((v,c))
+color_str = [str(c) for c in color]
+value_str = [str(v) for v in value]
 
-# for i, hand in enumerate(itertools.combinations(cards, 5)):
-    # hand_type = get_hand_type(hand)
-    # d_zero[i] = [hand, hand_type, payout(hand_type)]
+deck = [''.join([v, c]) for c in color_str
+                      for v in value_str ]
+
+"""
+possible hand ranks = 0,1,2,3,4,5,6,7,8,9
+
+{
+    # index is hand rank, value is # of possibilities
+    'CARD_STR': [0,0,0,0,0,0,0,0,0]
+}
+"""
+total_hand_combos = [0 for _ in range(9)]
+# total # of combinations of each hand type for individual card
+total_hand_combos_one = {card: [0 for _ in range(9)] for card in deck}
+
+# "  " for two cards
+total_hand_combos_two = {','.join(combo): [0 for _ in range(9)]
+                            for combo in combinations(deck, 2)}
+# "  " for three cards
+total_hand_combos_three = {','.join(combo): [0 for _ in range(9)]
+                                for combo in combinations(deck, 3)}
+# "  " for four cards
+total_hand_combos_four = {','.join(combo): [0 for _ in range(9)]
+                                for combo in combinations(deck, 4)}
+
+# " " for five cards - a dealt hand. each hand type is easy 0 or 1
+total_hand_combos_five = {','.join(combo): [0 for _ in range(9)]
+                                for combo in combinations(deck, 5)}
 
 
+print('runtime: %f') % (timeit.default_timer() - start_time)
 
-print(itertools.combinations(cards, 5).next())
+# a = np.asarray(d_zero)
+# np.savetxt("5_card_combos.csv", a, delimiter=',')
 
-updated_time = timeit.default_timer() - start_time
-print('discard 5 time: ', updated_time)
-
-a = np.asarray(d_zero)
-np.savetxt("5_card_combos.csv", a, delimiter=',')
-
-print('file saved')
+# print('file saved')
