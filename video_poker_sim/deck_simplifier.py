@@ -9,7 +9,6 @@ import pprint
 import sys
 import os
 
-from evaluators import isRoyalFlush, isStraightFlush, isOfAKind, isFullHouse, isFlush, isStraight, isTwoPair, isJacksOrBetter, payout
 
 import timeit
 
@@ -43,14 +42,43 @@ Identify possible combinations for following core hands:
 
 """
 
-"""
-Idea: for every
-
-
-"""
 
 
 """
 EV = sum( payout * (payout hits/total draws))
 
 """
+start_time = timeit.default_timer()
+
+
+
+# print(sc.comb(13,1) * sc.comb(12, 3))
+def get_suit_pattern(hand):
+    """
+    Takes a hand and returns suit pattern in form:
+    ex. 'ABCDA' - each letter represents different suit
+    ex. 'AAAAA' - all cards are same suit
+    ex. 'AAAAB' - one off a all same suit.
+    """
+
+    # turn hand into list of suits
+    suits = [c[1] for c in hand]
+
+    ss = set(suits) # suit sets
+
+    print(suits)
+    print(ss)
+    #
+
+    # if set is length 1 all are same
+
+    # if set is length 2
+
+    # if set is length 4 all different sans 1
+
+# test_hand = [[1,2], [1]
+
+# get_suit_pattern('test')
+
+
+print('runtime: %f') % (timeit.default_timer() - start_time)
