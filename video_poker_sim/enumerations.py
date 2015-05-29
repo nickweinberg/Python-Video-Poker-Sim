@@ -21,7 +21,18 @@ from hand_scoring import get_hand_type, payout
 
 """
 def sort_and_join(combo):
+    # str combo ie. ['12', '13']
     return '-'.join(sorted(combo))
+
+def create_deck():
+    # returns deck
+    color = [1,2,3,4]
+    value = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+
+    color_str = [str(c) for c in color]
+    value_str = [str(v) for v in value]
+
+    return [[v, c] for c in color for v in value]
 
 def create_dicts_and_save():
     start_time = timeit.default_timer()
@@ -81,43 +92,110 @@ def load_dicts(filename):
     # five_c = pickle.load(open('data/total_hand_combos_five.p', 'rb'))
     return pickle.load(open('data/%s' % (filename), 'rb'))
 
+def str_to_card(card_str):
+    # intput: card_str. ex. '131' or '11', etc.
+    # returns tuple (int, int)
+    if len(card_str) == 3:
+        rank = int(card_str[0:2])
+        suit = int(card_str[2])
+    elif len(card_str) == 2:
+        rank = int(card_str[0])
+        suit = int(card_str[1])
+    return rank, suit
 
-# one_card_combos =
-# two_card_combos =
+def str_to_card_str(card_str):
+    str_list = []
+    if len(card_str) == 3:
+        str_list.append(card_str[0:2])
+        str_list.append(card_str[2])
+    elif len(card_str) == 2:
+        str_list.append(card_str[0])
+        str_list.append(card_str[1])
+    return ''.join(str_list)
+
+
+def cards_to_str(hand):
+    return [''.join([str(c[0]), str(c[1])]) for c in hand]
+
+
+
 # three_card_combos =
 # four_card_combos =
 # five_card_combos
 
-# print(load_dicts('total_hand_combos_one.p'))
-
-total_hand_type_combos = [0 for _ in range(9)]
 # Loop through all 2,598,960 (or w/e possible hands)
 
-# 1) Score the hand to determine what hand type it is.
+def main():
+    start_time = timeit.default_timer() # timer to track runtime length
 
-# 2) Update total number of hands of type H
-# total_hand_type_combos[H] += 1
+    deck = create_deck() # create deck
+    total_hand_type_combos = [0 for _ in range(9)]
 
-# 3) For each of 5 individual cards, update the total
-#    number of hands of type H which include that card
-#    one_card_combos['CARD_STR'][H] += 1
+    # load dictionaries
+    one_card_combos   = load_dicts('total_hand_combos_one.p')
+    two_card_combos   = load_dicts('total_hand_combos_two.p')
+    three_card_combos = load_dicts('total_hand_combos_three.p')
+    four_card_combos  = load_dicts('total_hand_combos_four.p')
+    five_card_combos  = load_dicts('total_hand_combos_five.p')
 
-# 4) For each of 10 combinations of 2 cards, update the total
-#    number of hands of type H which include both cards
-#    two_card_combos['C1-C2'][H] += 1
+    for hand in combinations(deck, 5):
+        # hand :: ex. ([0, 1],[3,4],[4,4],[8,4],[12,4])
 
-# 5) For each of the 10 combinations of 3 cards, update the total
-#    number of hands of type H which includ all three cards
-#    three_card_combos['C1-C2-C3'][H] += 1
+        # 1) Score the hand to determine what hand type it is.
+        # hand score 9 -> 8. (index of arrays - 1)
+        hand_score_index = get_hand_type(hand) - 1
+
+        # 2) Update total number of hands of type H
+        total_hand_type_combos[hand_score_index] += 1
+
+        # 3) For each of 5 individual cards, update the total
+        #    number of hands of type H which include that card
+        for card in hand: # card :: [0, 1]
+            one_card_combos[''.join(
+                [str(card[0]), str(card[1])])][hand_score_index] += 1
+
+        # 4) For each of 10 combinations of 2 cards, update the total
+        #    number of hands of type H which include both cards
+        #    two_card_combos['C1-C2'][H] += 1
+        for combo in combinations(hand, 2):
+            two_card_str = sort_and_join(cards_to_str(combo))
+            two_card_combos[two_card_str][hand_score_index] += 1
+
+        # 5) For each of the 10 combinations of 3 cards, update the total
+        #    number of hands of type H which includ all three cards
+        #    three_card_combos['C1-C2-C3'][H] += 1
+        for combo in combinations(hand, 3):
+            three_card_str = sort_and_join(cards_to_str(combo))
+            three_card_combos[three_card_str][hand_score_index] += 1
+
+        # 6) For each of the 5 combinations of 4 cards, update the total
+        #    number of hands of type H which include all four cards.
+        #    four_card_combos['C1-C2-C3-C4'][H] += 1
+        for combo in combinations(hand, 4):
+            four_card_str = sort_and_join(cards_to_str(combo))
+            four_card_combos[four_card_str][hand_score_index] += 1
+
+        # 7) Update five_card_combos
+        #    five_card_combos['C1-C2-C3-C4-C5'][H] = 1
+        five_card_str = sort_and_join(cards_to_str(hand))
+        five_card_combos[five_card_str][hand_score_index] = 1
+
+    # save to disk
+    pickle.dump(one_card_combos, open('data/one_card_hand_type.p', 'wb'))
+    pickle.dump(two_card_combos, open('data/two_card_hand_type.p', 'wb'))
+    pickle.dump(three_card_combos, open('data/three_card_hand_type.p', 'wb'))
+    pickle.dump(four_card_combos, open('data/four_card_hand_type.p', 'wb'))
+    pickle.dump(five_card_combos, open('data/five_card_hand_type.p', 'wb'))
+
+    print('files saved')
+    print('runtime: %f') % (timeit.default_timer() - start_time)
 
 
-# 6) For each of the 5 combinations of 4 cards, update the total
-#    number of hands of type H which include all four cards.
-#    four_card_combos['C1-C2-C3-C4'][H] += 1
-
-
-# 7) Update five_card_combos
-#    five_card_combos['C1-C2-C3-C4-C5'][H] = 1
 
 # create_dicts_and_save()
+
+
+print('starting')
+
+main()
 
