@@ -103,12 +103,13 @@ hand, deck = deal_hand(deck)
 
 
 # all possible holds
-hold_5 = hand
-hold_4_combos = combinations(hand, 4)
-hold_3_combos = combinations(hand, 3)
-hold_2_combos = combinations(hand, 2)
-hold_1_combos = combinations(hand, 1)
+# hold_5 = hand
+# hold_4_combos = combinations(hand, 4)
+# hold_3_combos = combinations(hand, 3)
+# hold_2_combos = combinations(hand, 2)
+# hold_1_combos = combinations(hand, 1)
 # hold_0 = draw_new_hand(deck)
+
 
 
 
